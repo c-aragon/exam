@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: on-failure
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  client:
+    depends_on:
+      - rabbitmq
+      - account
+    image: ingaragon/client:v1
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - "8085:8085"
+  account:
+    depends_on:
+      - rabbitmq
+    image: ingaragon/account:v1
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - "8086:8086"
