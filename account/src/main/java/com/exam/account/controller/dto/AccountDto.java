@@ -26,9 +26,9 @@ public class AccountDto implements Serializable {
     @NotNull(message = "The account type can't be null!")
     private AccountType accountType;
 
-    @NotNull(message = "The balance can't be null!")
-    private BigDecimal balance;
+    private BigDecimal balance = new BigDecimal(0);
 
+    @NotNull(message = "The amount can't be null!")
     private BigDecimal amount;
 
     @NotNull(message = "The status account can't be null!")

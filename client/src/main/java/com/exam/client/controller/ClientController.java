@@ -17,4 +17,5 @@ public interface ClientController {
     ClientDto getClient(Long id);
 
     List<ClientDto> getClients();
+
 }

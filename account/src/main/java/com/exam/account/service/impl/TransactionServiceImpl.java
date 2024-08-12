@@ -3,8 +3,8 @@ package com.exam.account.service.impl;
 import com.exam.account.controller.dto.TransactionDto;
 import com.exam.account.exception.EntityNotFoundException;
 import com.exam.account.exception.InsufficientBalanceException;
+import com.exam.account.exception.InvalidDataException;
 import com.exam.account.exception.InvalidOperationException;
-import com.exam.account.mapper.AccountMapper;
 import com.exam.account.mapper.TransactionMapper;
 import com.exam.account.model.Account;
 import com.exam.account.model.StatusTransaction;
@@ -31,8 +31,8 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionMapper transactionMapper;
 
     public TransactionServiceImpl(AccountRepository accountRepository,
-                              TransactionRepository transactionRepository,
-                              TransactionMapper transactionMapper) {
+                                  TransactionRepository transactionRepository,
+                                  TransactionMapper transactionMapper) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.transactionMapper = transactionMapper;
@@ -45,7 +45,10 @@ public class TransactionServiceImpl implements TransactionService {
         if (account.isEmpty()) {
             throw new EntityNotFoundException(String.format("Transaction %d doesn't exists!", transactionDto.getAccountId()));
         }
-        Transaction transaction = transactionMapper.transactionDtoToTransaction(transactionDto);
+        Transaction transaction = Transaction.builder()
+                .transactionType(transactionDto.getTransactionType())
+                .amount(transactionDto.getAmount())
+                .build();
 
         if (transactionDto.getAmount().signum() < 0) {
             transaction.setTransactionType(TransactionType.RETIRO);
@@ -65,9 +68,9 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setBalance(account.get().getBalance().add(transactionDto.getAmount()));
         transaction.setStatusTransaction(StatusTransaction.APPLIED);
         try {
-            transactionRepository.save(transaction);
+            transactionRepository.saveAndFlush(transaction);
             account.get().setBalance(transaction.getBalance());
-            accountRepository.save(account.get());
+            accountRepository.saveAndFlush(account.get());
         } catch (DataIntegrityViolationException ex) {
             throw new DataIntegrityViolationException(ex.getMessage());
         }
@@ -77,6 +80,12 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDto editTransaction(Long id, TransactionDto transactionDto) {
         Transaction transaction = getTransactionEntity(id);
+        if (transactionDto.getAccountId().longValue() != transaction.getAccount().getId().longValue()) {
+            throw new InvalidDataException("Account number doesn't match with transaction");
+        }
+        if (transactionDto.getAmount().compareTo(transaction.getAmount()) != 0) {
+            throw new InvalidDataException("Amount doesn't match with transaction");
+        }
         transaction.setStatusTransaction(transactionDto.getStatusTransaction());
         transactionRepository.save(transaction);
         return transactionMapper.transactionToTransactionDto(transaction);
@@ -106,4 +115,6 @@ public class TransactionServiceImpl implements TransactionService {
         }
         throw new EntityNotFoundException(String.format("Transaction %d doesn't exists!", id));
     }
+
+
 }

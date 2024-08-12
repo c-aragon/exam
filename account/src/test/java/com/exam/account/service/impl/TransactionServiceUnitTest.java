@@ -7,34 +7,44 @@ import com.exam.account.exception.InvalidOperationException;
 import com.exam.account.mapper.TransactionMapper;
 import com.exam.account.model.Account;
 import com.exam.account.model.StatusAccount;
-import com.exam.account.model.StatusTransaction;
 import com.exam.account.model.Transaction;
-import com.exam.account.model.TransactionType;
 import com.exam.account.repository.AccountRepository;
 import com.exam.account.repository.TransactionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Optional;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        classes = {TransactionServiceImpl.class},
+        properties = {
+                "spring.cloud.config.enabled=false",
+                "spring.cloud.discovery.enabled=false",
+        })
+@EnableAutoConfiguration(exclude = {RabbitAutoConfiguration.class})
 public class TransactionServiceUnitTest {
 
     @MockBean
     private AccountRepository accountRepository;
 
     @MockBean
-    private TransactionRepository transactionRepository;
+    private TransactionMapper transactionMapper;
 
     @MockBean
-    private TransactionMapper transactionMapper;
+    private TransactionRepository transactionRepository;
 
     @Autowired
     private TransactionServiceImpl transactionService;

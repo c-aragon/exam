@@ -22,7 +22,6 @@ public class ClientDto extends PersonDto {
     @NotNull(message = "The name can't be null!")
     private Status status;
 
-    @NotNull(message = "Account data can't be null!")
     private AccountDto account;
 
 }

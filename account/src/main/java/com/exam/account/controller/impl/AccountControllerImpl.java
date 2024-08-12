@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController("/cuentas")
+@RestController
+@RequestMapping("/cuentas")
 public class AccountControllerImpl implements AccountController {
 
     private final AccountService accountService;
@@ -34,7 +36,7 @@ public class AccountControllerImpl implements AccountController {
 
     @PatchMapping("/{id}")
     @Override
-    public AccountDto editAccount(@PathVariable Long id, @Valid @RequestBody AccountDto accountDto) {
+    public AccountDto editAccount(@PathVariable Long id, @RequestBody AccountDto accountDto) {
         return accountService.editAccount(id, accountDto);
     }
 

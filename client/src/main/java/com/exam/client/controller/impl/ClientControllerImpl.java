@@ -2,6 +2,7 @@ package com.exam.client.controller.impl;
 
 import com.exam.client.controller.ClientController;
 import com.exam.client.controller.dto.ClientDto;
+import com.exam.client.controller.dto.report.ReportDto;
 import com.exam.client.service.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class ClientControllerImpl implements ClientController {
 
     @PatchMapping("/{id}")
     @Override
-    public ClientDto editClient(@PathVariable Long id, @Valid @RequestBody ClientDto clientDto) {
+    public ClientDto editClient(@PathVariable Long id, @RequestBody ClientDto clientDto) {
         return clientService.editClient(id, clientDto);
     }
 

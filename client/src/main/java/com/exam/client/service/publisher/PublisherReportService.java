@@ -1,7 +1,6 @@
-package com.exam.client.service;
+package com.exam.client.service.publisher;
 
-import com.exam.client.controller.dto.AccountDto;
-import com.exam.client.mapper.AccountMapper;
+import com.exam.client.service.dto.ReportMessageDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -9,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PublisherService {
+public class PublisherReportService {
 
     private final String queueName;
 
@@ -17,16 +16,16 @@ public class PublisherService {
 
     private final ObjectMapper objectMapper;
 
-    public PublisherService(final RabbitTemplate rabbitTemplate,
-                            ObjectMapper objectMapper,
-                            @Value("${queue.name}") final String queueName) {
+    public PublisherReportService(final RabbitTemplate rabbitTemplate,
+                                  final ObjectMapper objectMapper,
+                                  @Value("${queue.name.request-report}") final String queueName) {
         this.rabbitTemplate = rabbitTemplate;
         this.queueName = queueName;
         this.objectMapper = objectMapper;
     }
 
-    public void send(AccountDto account) throws JsonProcessingException {
-        rabbitTemplate.convertAndSend(queueName, objectMapper.writeValueAsString(account));
+    public void send(ReportMessageDto reportRequest) throws JsonProcessingException {
+        rabbitTemplate.convertAndSend(queueName, objectMapper.writeValueAsString(reportRequest));
     }
 
 }

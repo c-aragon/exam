@@ -2,12 +2,16 @@ package com.exam.account.controller.handler;
 
 import com.exam.account.exception.EntityNotFoundException;
 import com.exam.account.exception.InsufficientBalanceException;
+import com.exam.account.exception.InvalidDataException;
+import com.exam.account.exception.ServiceErrorException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
@@ -30,6 +34,20 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(value = {DataIntegrityViolationException.class})
     protected ResponseEntity<ErrorMessage> handleDataIntegrityViolation(RuntimeException ex) {
         ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.status());
+    }
+
+    @ExceptionHandler(value = {InvalidDataException.class})
+    protected ResponseEntity<ErrorMessage> handleInvalidData(RuntimeException ex) {
+        ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.status());
+    }
+
+    @ExceptionHandler(value = {ServiceErrorException.class})
+    protected ResponseEntity<ErrorMessage> handleErrorOnExternalService(RuntimeException ex) {
+        ErrorMessage apiError = new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
 
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.status());
     }

@@ -6,7 +6,7 @@ import com.exam.client.mapper.ClientMapper;
 import com.exam.client.model.Client;
 import com.exam.client.repository.ClientRepository;
 import com.exam.client.service.ClientService;
-import com.exam.client.service.PublisherService;
+import com.exam.client.service.publisher.PublisherAccountService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -19,14 +19,14 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
-    private final PublisherService publisherService;
+    private final PublisherAccountService publisherAccountService;
 
     public ClientServiceImpl(ClientRepository clientRepository,
                              ClientMapper clientMapper,
-                             PublisherService publisherService) {
+                             PublisherAccountService publisherAccountService) {
         this.clientRepository = clientRepository;
         this.clientMapper = clientMapper;
-        this.publisherService = publisherService;
+        this.publisherAccountService = publisherAccountService;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ClientServiceImpl implements ClientService {
         try {
             clientRepository.save(client);
             clientDto.getAccount().setIdClient(client.getId());
-            publisherService.send(clientDto.getAccount());
+            publisherAccountService.send(clientDto.getAccount());
         } catch (DataIntegrityViolationException ex) {
             throw new DataIntegrityViolationException(ex.getMessage());
         } catch (JsonProcessingException e) {

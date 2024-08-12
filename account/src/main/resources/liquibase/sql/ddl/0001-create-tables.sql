@@ -1,7 +1,7 @@
 create table account (
     id_account long primary key auto_increment,
     account_type varchar(10) not null,
-    balance numeric not null,
+    balance numeric,
     status varchar(10) not null,
     id_client long not null
 );

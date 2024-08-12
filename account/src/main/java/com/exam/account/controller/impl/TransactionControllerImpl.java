@@ -36,7 +36,7 @@ public class TransactionControllerImpl implements TransactionController {
 
     @PatchMapping("/{id}")
     @Override
-    public TransactionDto editTransaction(@PathVariable Long id, @Valid @RequestBody TransactionDto transactionDto) {
+    public TransactionDto editTransaction(@PathVariable Long id, @RequestBody TransactionDto transactionDto) {
         return transactionService.editTransaction(id, transactionDto);
     }
 
