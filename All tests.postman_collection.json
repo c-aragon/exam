@@ -1,0 +1,462 @@
+{
+	"info": {
+		"_postman_id": "250fcdc6-5293-431c-8bc9-f904679a5390",
+		"name": "All tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34606106"
+	},
+	"item": [
+		{
+			"name": "Get all accounts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8086/cuentas",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"cuentas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check new data\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.accountType).to.eql(\"AHORROS\");",
+							"    pm.expect(jsonData.balance).to.eql(2000);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8086/cuentas/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"cuentas",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Check new data\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.accountType).to.eql(\"CORRIENTE\");",
+							"    pm.expect(jsonData.balance).to.eql(2000);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"accountType\": \"CORRIENTE\",\n    \"amount\": 2000,\n    \"statusAccount\": \"ACTIVE\",\n    \"idClient\": 1,\n    \"transactions\": []\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8086/cuentas",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"cuentas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all accounts after new account",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8086/cuentas",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"cuentas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Clients Before",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/clientes",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"clientes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Check new ID\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(\"ACTIVE\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Carlos Aragón\",\n    \"gender\": \"MALE\",\n    \"birthDate\": \"1985-11-28\",\n    \"idCard\": \"AACC851128HOCRRR09\",\n    \"phone\": \"9515720005\",\n    \"address\": \"Altamirano 6\",\n    \"password\": \"12345678\",\n    \"status\": \"ACTIVE\",\n    \"account\" : {\n        \"accountType\" : \"AHORROS\",\n        \"amount\" : 500.0\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8085/clientes",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"clientes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Clients after",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/clientes",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"clientes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get One Client",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/clientes/4",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"clientes",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Transaction 01",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"accountId\": 6,\n        \"amount\": 10400\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8086/movimientos",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"movimientos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Transaction 02",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"accountId\": 4,\n        \"amount\": 1000\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8086/movimientos",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"movimientos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Transaction 03",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"accountId\": 4,\n    \"amount\": 2000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8086/movimientos",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"movimientos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Transactions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8086/movimientos",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"movimientos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Transaction",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"accountId\": 4,\n    \"statusTransaction\": \"REFUSED\",\n    \"amount\": \"1000\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8086/movimientos/4",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"movimientos",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create report",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check values\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.idClient).to.eql(4);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8086/report?startDate=2024-01-01T00:00:00&endDate=2024-12-31T23:59:59&idClient=4",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"report"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2024-01-01T00:00:00"
+						},
+						{
+							"key": "endDate",
+							"value": "2024-12-31T23:59:59"
+						},
+						{
+							"key": "idClient",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all reports",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/report",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"report"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Report",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/report/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"report",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
